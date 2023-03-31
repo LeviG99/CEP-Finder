@@ -5,17 +5,17 @@ import io.swagger.annotations.ApiModelProperty;
 
 public class AddressRequest {
 
-    public AddressRequest(String cep){
-      this.cep = cep;
-    };
     @ApiModelProperty(notes= "CEP", example = "01001000")
-    private String cep;
+    private String CEP;
+    public AddressRequest(String CEP){
+      this.CEP = CEP;
+    };
+    public AddressRequest(){};
 
-    public String getCep() {
-        return cep;
+    public String getCEP() {
+        return CEP;
     }
-
-    public void setCep(String cep) {
-        this.cep = cep;
+    public void setCEP(String CEP) {
+        this.CEP = CEP;
     }
 }

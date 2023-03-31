@@ -2,6 +2,7 @@ package com.example.cepfinder.controller.handlerException;
 
 import com.example.cepfinder.exceptions.InvalidCepException;
 import com.example.cepfinder.exceptions.NotFoundException;
+import com.example.cepfinder.exceptions.UnknownException;
 import com.example.cepfinder.model.dto.ErrorDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,12 @@ public class HandlerException {
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ErrorDTO> notFoundException(NotFoundException notFoundException){
         ErrorDTO errorDTO = new ErrorDTO(HttpStatus.NOT_FOUND,notFoundException.getMessage());
+        return new ResponseEntity<>(errorDTO,errorDTO.getHttpStatus());
+    };
+
+    @ExceptionHandler(UnknownException.class)
+    public ResponseEntity<ErrorDTO> unknownException(UnknownException unknownException){
+        ErrorDTO errorDTO = new ErrorDTO(HttpStatus.INTERNAL_SERVER_ERROR,unknownException.getMessage());
         return new ResponseEntity<>(errorDTO,errorDTO.getHttpStatus());
     };
 }

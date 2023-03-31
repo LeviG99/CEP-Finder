@@ -1,80 +1,87 @@
 package com.example.cepfinder.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class AddressResponse {
 
-    private String cep;
-    private String rua;
-
-    private String complemento;
-    private String bairro;
-    private String cidade;
-    private String estado;
-
-    private double frete;
+    @JsonProperty("cep")
+    private String CEP;
+    @JsonProperty("rua")
+    private String street;
+    @JsonProperty("complemento")
+    private String complement;
+    @JsonProperty("bairro")
+    private String district;
+    @JsonProperty("cidade")
+    private String city;
+    @JsonProperty("estado")
+    private String state;
+    @JsonProperty("frete")
+    private double shipping;
 
     public AddressResponse(String cep, String logradouro, String complemento, String bairro, String localidade, String uf, double frete) {
-        this.cep = cep;
-        this.rua = logradouro;
-        this.complemento = complemento;
-        this.bairro = bairro;
-        this.cidade = localidade;
-        this.estado = uf;
-        this.frete = frete;
+        this.CEP = cep;
+        this.street = logradouro;
+        this.complement = complemento;
+        this.district = bairro;
+        this.city = localidade;
+        this.state = uf;
+        this.shipping = frete;
     }
 
-    public String getCep() {
-        return cep;
+    public String getCEP() {
+        return CEP;
     }
 
-    public void setCep(String cep) {
-        this.cep = cep;
+    public void setCEP(String CEP) {
+        this.CEP = CEP;
     }
 
-    public String getRua() {
-        return rua;
+    public String getStreet() {
+        return street;
     }
 
-    public void setRua(String rua) {
-        this.rua = rua;
+    public void setStreet(String street) {
+        this.street = street;
     }
 
-    public String getBairro() {
-        return bairro;
+    public String getComplement() {
+        return complement;
     }
 
-    public void setBairro(String bairro) {
-        this.bairro = bairro;
+    public void setComplement(String complement) {
+        this.complement = complement;
     }
 
-    public String getCidade() {
-        return cidade;
+    public String getDistrict() {
+        return district;
     }
 
-    public void setCidade(String cidade) {
-        this.cidade = cidade;
+    public void setDistrict(String district) {
+        this.district = district;
     }
 
-    public String getEstado() {
-        return estado;
+    public String getCity() {
+        return city;
     }
 
-    public void setEstado(String estado) {
-        this.estado = estado;
+    public void setCity(String city) {
+        this.city = city;
     }
 
-    public String getComplemento() {
-        return complemento;
+    public String getState() {
+        return state;
     }
 
-    public void setComplemento(String complemento) {
-        this.complemento = complemento;
+    public void setState(String state) {
+        this.state = state;
     }
 
-    public double getFrete() {
-        return frete;
+    public double getShipping() {
+        return shipping;
     }
 
-    public void setFrete(double frete) {
-        this.frete = frete;
+    public void setShipping(double shipping) {
+        this.shipping = shipping;
     }
 }

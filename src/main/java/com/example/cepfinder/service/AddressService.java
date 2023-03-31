@@ -1,19 +1,25 @@
 package com.example.cepfinder.service;
 
+import com.example.cepfinder.enums.RegionEnum;
 import com.example.cepfinder.exceptions.InvalidCepException;
 import com.example.cepfinder.exceptions.NotFoundException;
+import com.example.cepfinder.exceptions.UnknownException;
 import com.example.cepfinder.feign.AddressFeign;
 import com.example.cepfinder.model.dto.AddressRequest;
 import com.example.cepfinder.model.dto.AddressResponse;
 import org.springframework.stereotype.Service;
 
-import static com.example.cepfinder.enums.regiaoEnum.*;
+import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 @Service
 public class AddressService {
 
     private final AddressFeign addressFeign;
+    private final String regex = "^\\d{5}-?\\d{3}$";
+    private final Pattern pattern = Pattern.compile(regex);
 
 
     public AddressService(AddressFeign addressFeign) {
@@ -22,46 +28,33 @@ public class AddressService {
 
 
     public AddressResponse execute (AddressRequest request){
-        if(!validaCep(request.getCep())){
+        if(!validateCep(request.getCEP())){
             throw new InvalidCepException("O formato do CEP inserido está incorreto.");
         }
-        AddressResponse response = addressFeign.findAddressCep(request.getCep());
-        response.setFrete(calculaFrete(response.getEstado()));
-        if(response.getFrete() == 0.0){
-            throw new NotFoundException("O CEP inserido não foi encontrado.");
+        try {
+            AddressResponse response = addressFeign.findAddressCep(request.getCEP());
+            response.setShipping(calculateShipping(response.getState()));
+            if(response.getShipping() == 0.0){
+                throw new NotFoundException("O CEP inserido não foi encontrado.");
+            }
+            return response;
+        } catch (NotFoundException ex) {
+            throw ex;
+        } catch (Exception ex){
+            throw new UnknownException("Erro desconhecido");
         }
-        return response;
     }
 
-    private double calculaFrete(String estado){
-        if(SUDESTE.getEstados().contains(estado)) return SUDESTE.getValue();
-        else if(CENTRO_OESTE.getEstados().contains(estado)) return CENTRO_OESTE.getValue();
-        else if(NORDESTE.getEstados().contains(estado)) return NORDESTE.getValue();
-        else if (SUL.getEstados().contains(estado)) return SUL.getValue();
-        else if (NORTE.getEstados().contains(estado)) return NORTE.getValue();
-        else return 0.0;
+    private double calculateShipping(String state){
+        return Arrays.stream(RegionEnum.values())
+                .filter(region -> region.getStates().contains(state))
+                .mapToDouble(RegionEnum::getValue)
+                .findFirst()
+                .orElse(0.0);
     };
 
-    private boolean validaCep(String cep){
-      if(cep.length() == 9){
-         if(cep.contains("-")){
-           String numericCep = cep.replace("-","");
-           try{
-               Integer.parseInt(numericCep);
-           } catch (NumberFormatException nfe){
-               return false;
-           }
-           return true;
-         };
-      };
-      if (cep.length() == 8){
-          try{
-              Integer.parseInt(cep);
-          } catch (NumberFormatException nfe){
-              return false;
-          }
-          return true;
-        };
-      return false;
-    };
+    private boolean validateCep(String cep){
+        Matcher matcher = pattern.matcher(cep);
+        return matcher.matches();
+    }
 }
