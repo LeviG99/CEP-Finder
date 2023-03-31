@@ -1,6 +1,6 @@
 # CEP-Finder
 
-API REST de consulta de endereço e cálculo de frete para um determinado CEP.
+API REST de consulta de endereço e cálculo de frete para um determinado CEP, utilizando da API [ViaCEP](https://viacep.com.br/).
 
 - Para realizar uma consulta de um CEP específico, é necessário realizar uma requisição com o corpo:
   {
